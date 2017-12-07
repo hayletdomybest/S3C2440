@@ -1,0 +1,122 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000 53000000 
+                       watch_dog_base
+                               EQU              0x53000000  ;開門狗基址
+    2 00000000                 IMPORT           xmain       ;主程式
+    3 00000000         
+    4 00000000         ;IMPORT  |Image$$SRAM$$Base| ;SRAM內存基址
+    5 00000000         
+    6 00000000         
+    7 00000000                 PRESERVE8                    ;SP 8字節對齊
+    8 00000000                 AREA             RESET, CODE, READONLY
+    9 00000000         
+   10 00000000                 ENTRY
+   11 00000000         
+   12 00000000         start
+   13 00000000 EB000003        bl               disable_watchdog
+   14 00000004         on_sdram
+   15 00000004 E59FD018        ldr              sp,=4096
+   16 00000008 E59F0018        ldr              r0,=xmain
+   17 0000000C         ;add r0,r0,#8
+   18 0000000C         ;movs pc,r0
+   19 0000000C EBFFFFFE        bl               xmain
+   20 00000010         halt
+   21 00000010 EAFFFFFE        B                halt
+   22 00000014         
+   23 00000014         disable_watchdog
+   24 00000014 E3A00453        ldr              r0,=watch_dog_base
+   25 00000018 E3A01000        mov              r1,#0
+   26 0000001C E5801000        str              r1,[r0]
+   27 00000020 E1A0F00E        mov              pc,lr
+   28 00000024                 END
+              00001000 
+              00000000 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=ARM920T --apcs=interwor
+k --depend=.\objects\start.d -o.\objects\start.o -ID:\Programe\Keil_v5\ARM\RV31
+\INC -ID:\Programe\Keil_v5\ARM\CMSIS\Include -ID:\Programe\Keil_v5\ARM\Inc\Sams
+ung --predefine="__UVISION_VERSION SETA 520" --list=.\listings\start.lst src\st
+art.S
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 8 in file src\start.S
+   Uses
+      None
+Comment: RESET unused
+disable_watchdog 00000014
+
+Symbol: disable_watchdog
+   Definitions
+      At line 23 in file src\start.S
+   Uses
+      At line 13 in file src\start.S
+Comment: disable_watchdog used once
+halt 00000010
+
+Symbol: halt
+   Definitions
+      At line 20 in file src\start.S
+   Uses
+      At line 21 in file src\start.S
+Comment: halt used once
+on_sdram 00000004
+
+Symbol: on_sdram
+   Definitions
+      At line 14 in file src\start.S
+   Uses
+      None
+Comment: on_sdram unused
+start 00000000
+
+Symbol: start
+   Definitions
+      At line 12 in file src\start.S
+   Uses
+      None
+Comment: start unused
+5 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+watch_dog_base 53000000
+
+Symbol: watch_dog_base
+   Definitions
+      At line 1 in file src\start.S
+   Uses
+      At line 24 in file src\start.S
+Comment: watch_dog_base used once
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+xmain 00000000
+
+Symbol: xmain
+   Definitions
+      At line 2 in file src\start.S
+   Uses
+      At line 16 in file src\start.S
+      At line 19 in file src\start.S
+
+1 symbol
+340 symbols in table

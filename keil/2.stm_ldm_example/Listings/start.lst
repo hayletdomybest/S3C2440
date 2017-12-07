@@ -1,0 +1,246 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000 53000000 
+                       watch_dog_base
+                               EQU              0x53000000  ;開門狗基址
+    2 00000000 05600050 
+                       GPIO_CONF
+                               EQU              0X5600050
+    3 00000000 05600054 
+                       GPIO_DATA
+                               EQU              0X5600054
+    4 00000000                 IMPORT           xmain       ;主程式
+    5 00000000         
+    6 00000000         ;IMPORT  |Image$$SRAM$$Base| ;SRAM內存基址
+    7 00000000         
+    8 00000000         
+    9 00000000                 PRESERVE8                    ;SP 8字節對齊
+   10 00000000                 AREA             RESET, CODE, READONLY
+   11 00000000         
+   12 00000000                 ENTRY
+   13 00000000         
+   14 00000000         start
+   15 00000000 E59FD090        ldr              sp,=4096
+   16 00000004 EB000005        bl               disable_watchdog
+   17 00000008 EB000008        bl               io_init
+   18 0000000C EB000011        bl               led_on
+   19 00000010 EB00001A        bl               _delay_
+   20 00000014         on_sdram
+   21 00000014         
+   22 00000014 E59F0080        ldr              r0,=xmain
+   23 00000018         ;add r0,r0,#8
+   24 00000018         ;movs pc,r0
+   25 00000018 EBFFFFFE        bl               xmain
+   26 0000001C         halt
+   27 0000001C EAFFFFFE        B                halt
+   28 00000020         
+   29 00000020         disable_watchdog
+   30 00000020 E3A00453        ldr              r0,=watch_dog_base
+   31 00000024 E3A01000        mov              r1,#0
+   32 00000028 E5801000        str              r1,[r0]
+   33 0000002C E1B0F00E        movs             pc,lr
+   34 00000030         io_init
+   35 00000030 E59F0068        ldr              r0,=GPIO_CONF
+   36 00000034 E3A04003        mov              r4,#3
+   37 00000038 E3A02002        mov              r2,#2
+   38 0000003C         0
+   39 0000003C E2844001        add              r4,#1       ;r4 ++
+   40 00000040 E1A01412        lsl              r1,r2,r4    ;r1=r2<<r4
+   41 00000044 E1833001        orr              r3,r1       ;r3=r3|r1
+   42 00000048 E3540006        cmp              r4,#6
+   43 0000004C 1AFFFFFA        bne              %B0
+   44 00000050 E5803000        str              r3,[r0]
+   45 00000054 E1B0F00E        movs             pc,lr
+   46 00000058         led_on
+   47 00000058 E59F0044        ldr              r0,=GPIO_DATA
+   48 0000005C E3A01003        mov              r1,#3
+   49 00000060         0
+   50 00000060 E2811001        add              r1,#1
+   51 00000064 E1A01111        lsl              r1,r1
+   52 00000068 E5801000        str              r1,[r0]
+   53 0000006C E92D4003        stmdb            sp!,{r0-r1,lr}
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   54 00000070 EB000002        bl               _delay_
+   55 00000074 E8BD4003        ldmia            sp!, {r0-r1,lr}
+   56 00000078 E3510006        cmp              r1,#6
+   57 0000007C 1AFFFFF7        bne              %b0
+   58 00000080         
+   59 00000080         
+   60 00000080         _delay_                              ;about 6 sec
+   61 00000080 E3A00000        ldr              r0,=0
+   62 00000084 E3E024FF        ldr              r2,=0xFFFFFF
+   63 00000088         0
+   64 00000088 E2800001        add              r0,#1
+   65 0000008C E1500002        cmp              r0,r2
+   66 00000090 1AFFFFFC        bne              %B0
+   67 00000094 E1B0F00E        movs             pc,lr
+   68 00000098         
+   69 00000098                 END
+              00001000 
+              00000000 
+              05600050 
+              05600054 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=ARM920T --apcs=interwor
+k --depend=.\objects\start.d -o.\objects\start.o -I"D:\Program Files\Keil_v5\AR
+M\RV31\INC" -I"D:\Program Files\Keil_v5\ARM\CMSIS\Include" -I"D:\Program Files\
+Keil_v5\ARM\INC\Samsung" --predefine="__EVAL SETA 1" --predefine="__UVISION_VER
+SION SETA 524" --list=.\listings\start.lst src\start.S
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+ 0000003C
+
+Symbol: 
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+ 00000060
+
+Symbol: 
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+ 00000088
+
+Symbol: 
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 10 in file src\start.S
+   Uses
+      None
+Comment: RESET unused
+_delay_ 00000080
+
+Symbol: _delay_
+   Definitions
+      At line 60 in file src\start.S
+   Uses
+      At line 19 in file src\start.S
+      At line 54 in file src\start.S
+
+disable_watchdog 00000020
+
+Symbol: disable_watchdog
+   Definitions
+      At line 29 in file src\start.S
+   Uses
+      At line 16 in file src\start.S
+Comment: disable_watchdog used once
+halt 0000001C
+
+Symbol: halt
+   Definitions
+      At line 26 in file src\start.S
+   Uses
+      At line 27 in file src\start.S
+Comment: halt used once
+io_init 00000030
+
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+Symbol: io_init
+   Definitions
+      At line 34 in file src\start.S
+   Uses
+      At line 17 in file src\start.S
+Comment: io_init used once
+led_on 00000058
+
+Symbol: led_on
+   Definitions
+      At line 46 in file src\start.S
+   Uses
+      At line 18 in file src\start.S
+Comment: led_on used once
+on_sdram 00000014
+
+Symbol: on_sdram
+   Definitions
+      At line 20 in file src\start.S
+   Uses
+      None
+Comment: on_sdram unused
+start 00000000
+
+Symbol: start
+   Definitions
+      At line 14 in file src\start.S
+   Uses
+      None
+Comment: start unused
+11 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+GPIO_CONF 05600050
+
+Symbol: GPIO_CONF
+   Definitions
+      At line 2 in file src\start.S
+   Uses
+      At line 35 in file src\start.S
+Comment: GPIO_CONF used once
+GPIO_DATA 05600054
+
+Symbol: GPIO_DATA
+   Definitions
+      At line 3 in file src\start.S
+   Uses
+      At line 47 in file src\start.S
+Comment: GPIO_DATA used once
+watch_dog_base 53000000
+
+Symbol: watch_dog_base
+   Definitions
+      At line 1 in file src\start.S
+   Uses
+      At line 30 in file src\start.S
+Comment: watch_dog_base used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+xmain 00000000
+
+Symbol: xmain
+   Definitions
+      At line 4 in file src\start.S
+   Uses
+      At line 22 in file src\start.S
+      At line 25 in file src\start.S
+
+1 symbol
+349 symbols in table

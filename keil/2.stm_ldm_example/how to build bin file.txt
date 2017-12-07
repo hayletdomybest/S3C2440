@@ -1,0 +1,2 @@
+Opetino→User→After build/Rebuild → Run#1
+type this "D:\Programe\Keil_v5\ARM\ARMCC\bin\fromelf.exe --bin --output=.\Objects\example.bin  .\Objects\*.axf"
