@@ -1,13 +1,12 @@
-watch_dog_base		  EQU      0x53000000;開門狗基址
+watch_dog_base		  EQU      0x53000000					;watch_dog configure address
 GPIO_CONF			  EQU	   0X56000050
 GPIO_DATA			  EQU	   0X56000054
 GPIO_VAL			      EQU     0x5500
-		IMPORT xmain ;主程式
+		IMPORT xmain 							;Declare C main function is named xmain
 		
-		;IMPORT  |Image$$SRAM$$Base| ;SRAM內存基址
 				
 		
-			 PRESERVE8 ;SP 8字節對齊
+			 PRESERVE8 						;SP(stack point) must allign 8 bytes					
          AREA RESET, CODE, READONLY
       
 		 ENTRY
@@ -22,9 +21,7 @@ start
 on_sdram
 
          ldr r0,=xmain
-		 ;add r0,r0,#8
-		 ;movs pc,r0
-		 bl xmain
+	 bl xmain
 halt
          B halt
 		 
